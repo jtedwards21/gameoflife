@@ -11,30 +11,6 @@ var getRandomInt = function(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-var checkSquare = function(i, table, tableHeight){
-  //Check the number of neighbors
-  var n = 0;
-  if(table[i-1] == 1){n++}
-  if(table[i+1] == 1){n++}
-  if(table[i - tableHeight - 1] == 1){n++}//Check Negative Block
-  if(table[i - tableHeight + 1] == 1){n++}//Check Negative Block
-  if(table[i + tableHeight - 1] == 1){n++}//Check Exceeds Block
-  if(table[i + tableHeight + 1] == 1){n++}//Check Exceeds Block
-  if(table[i - tableHeight] == 1){n++}//Check Negative Block
-  if(table[i + tableHeight] == 1){n++}//Check Exceeds Block
-  if(table[i] == 1){
-    if(n < 2){return 0}
-    if(n > 1 && n < 4){return 1}
-    if(n > 3){return 0}
-  }
-  if(table[i] == 0){
-    if(n == 3){return 1}
-    else{return 0}
-  }
-}
-
-
-
 var setBoard = function(table){
   for(var i = 0; i < table.length; i++){
     table[i] = getRandomInt(0,2)
@@ -95,6 +71,27 @@ var Board = React.createClass({
     var j = i -this.props.height;
     return this.state.table[j]
   },
+  checkSquare(i, table){
+  //Check the number of neighbors
+  var n = 0;
+  if(table[i-1] == 1){n++}
+  if(table[i+1] == 1){n++}
+  if(table[i - this.state.width - 1] == 1){n++}//Check Negative Block
+  if(table[i - this.state.width + 1] == 1){n++}//Check Negative Block
+  if(table[i + this.state.width - 1] == 1){n++}//Check Exceeds Block
+  if(table[i + this.state.width + 1] == 1){n++}//Check Exceeds Block
+  if(table[i - this.state.width] == 1){n++}//Check Negative Block
+  if(table[i + this.state.width] == 1){n++}//Check Exceeds Block
+  if(table[i] == 1){
+    if(n < 2){return 0}
+    if(n > 1 && n < 4){return 1}
+    if(n > 3){return 0}
+  }
+  if(table[i] == 0){
+    if(n == 3){return 1}
+    else{return 0}
+  }
+},
   makeArray(r, c){
     console.log(r)
     console.log(c)
@@ -106,6 +103,19 @@ var Board = React.createClass({
     }
     setBoard(table)
     return table;
+  },
+  refreshBoard(){
+    var t = this.state.table;
+    var newTable = this.state.table;
+    for(var i = 0; i < t.length; i++){
+	var result = this.checkSquare(i, t);
+        console.log(result);
+        newTable[i] = result;
+    }
+    this.setState({table:newTable});
+  },
+  componentDidMount(){
+    setInterval(this.refreshBoard, 3000);
   },
   getInitialState(){
     var t = this.makeArray(this.props.height,this.props.width);
