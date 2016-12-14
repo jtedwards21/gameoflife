@@ -87,16 +87,22 @@ var Board = React.createClass({
   checkSquare(i, table){
   //Check the number of neighbors
   var n = 0;
-  if(i > 0){ if(table[left].value == 1){n++}}
-  ///////////////////////////////////////////////////////////////Continue From Here
-  /////////////////////////////////////////////////////Left should give nothing
-  if(table[i+1].value == 1){n++}
-  if(table[i - this.state.width - 1].value == 1){n++}//Check Negative Block
-  if(table[i - this.state.width + 1].value == 1){n++}//Check Negative Block
-  if(table[i + this.state.width - 1].value == 1){n++}//Check Exceeds Block
-  if(table[i + this.state.width + 1].value == 1){n++}//Check Exceeds Block
-  if(table[i - this.state.width].value == 1){n++}//Check Negative Block
-  if(table[i + this.state.width].value == 1){n++}//Check Exceeds Block
+  var left = i - 1;
+  var right = i + 1;
+  var top = i - this.state.height;
+  var bottom = i + this.state.height;
+  var topRight = top + 1;
+  var topLeft = top - 1;
+  var bottomRight = bottom + 1;
+  var bottomLeft = bottom - 1; 
+  if(i%this.state.width !== 0){ if(table[left].value == 1){n++}}
+  if(i%(this.state.width - 1) !== 0){if(table[right].value == 1){n++}}
+  if(i-this.state.width >= 0 && i%this.state.width !== 0){if(table[topLeft].value == 1){n++}}
+  if(i-this.state.width >= 0 && i%(this.state.width - 1) !== 0){if(table[topRight].value == 1){n++}}
+  if(i+this.state.width < this.state.table.length && i%this.state.width !== 0){if(table[bottomLeft].value == 1){n++}}
+  if(i+this.state.width < (this.state.table.length - 1) && i%(this.state.width - 1) !== 0){if(table[bottomRight].value == 1){console.log(i);n++}}
+  if(i-this.state.width >= 0){if(table[top].value == 1){n++}}
+  if(i+this.state.width < this.state.table.length){if(table[bottom].value == 1){n++}}
   if(table[i].value == 1){
     if(n < 2){return 0}
     if(n > 1 && n < 4){return 1}

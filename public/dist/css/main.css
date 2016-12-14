@@ -10,7 +10,11 @@
   width: 34px;
 }
 
-#board{
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+#board {
+  display: block;
+}
+
+.board-row{
+  display: -ms-flexbox;
+  display: flex;
 }

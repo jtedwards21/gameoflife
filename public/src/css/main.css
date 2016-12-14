@@ -10,6 +10,10 @@
   width: 34px;
 }
 
-#board{
-  display: inline-flex;
+#board {
+  display: block;
+}
+
+.board-row{
+  display: flex;
 }
