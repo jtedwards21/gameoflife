@@ -9,3 +9,8 @@
   padding: 0;
   width: 34px;
 }
+
+#board{
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}

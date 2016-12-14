@@ -1,8 +1,9 @@
 //First you have to check all the squares, creating a table to at last substitute for the old table
 //Every round you will have to re-initialize the substitute table
 
-var height = 32;
-var width = 32;
+
+var height = 6;
+var width = 6;
 
 var getRandomInt = function(min, max) {
   min = Math.ceil(min);
@@ -95,6 +96,8 @@ var Board = React.createClass({
     return this.state.table[j]
   },
   makeArray(r, c){
+    console.log(r)
+    console.log(c)
     var table = []
     var nOfCells = r*c
     while(nOfCells > 0){
@@ -115,11 +118,12 @@ var Board = React.createClass({
       var startSquare = i * this.state.width;
       rows.push(full.slice(startSquare, startSquare + this.state.width));
     }
+    console.log(rows);
     rows = rows.map(function(r){
 	return <Row squares={r} />
      })
     console.log('l');
-    return <div>{rows}</div>
+    return <div id="board">{rows}</div>
   }
 });
 
