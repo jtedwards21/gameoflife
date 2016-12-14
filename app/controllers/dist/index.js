@@ -13,7 +13,8 @@ var getRandomInt = function(min, max) {
 
 var setBoard = function(table){
   for(var i = 0; i < table.length; i++){
-    table[i] = getRandomInt(0,2)
+    var v = getRandomInt(0,2);
+    table[i] = {value: v, number: i}
     
   }
   return table;
@@ -26,6 +27,10 @@ var setBoard = function(table){
 
 
 var Square = React.createClass({
+  toggleState(){
+    var n = this.props.number
+    this.props.toggleState(n);
+  },
   render() {
     var style;
     if(this.props.value == 1){
@@ -35,7 +40,7 @@ var Square = React.createClass({
     }
     return(
       <div>
-        <div style={style} className="square"></div>
+        <div style={style} onClick={this.toggleState} className="square"></div>
       </div>
     )
   }
@@ -45,10 +50,14 @@ var Square = React.createClass({
 
 
 var Row = React.createClass({
+  toggleState(n){
+    this.props.toggleState(n);
+  },
   render(){
     var squares = this.props.squares;
+    var that = this;
     squares = squares.map(function(s){
-	return <Square value={s} />
+	return <Square toggleState={that.toggleState} value={s.value} number={s.number} />
     })
 
     return(
@@ -63,6 +72,10 @@ var Row = React.createClass({
 
 
 var Board = React.createClass({
+  toggleState(n){
+     console.log(n);
+    
+  },
   getTopSquare(i){
     var j = i - this.props.height;
     return this.state.table[j]
@@ -74,20 +87,22 @@ var Board = React.createClass({
   checkSquare(i, table){
   //Check the number of neighbors
   var n = 0;
-  if(table[i-1] == 1){n++}
-  if(table[i+1] == 1){n++}
-  if(table[i - this.state.width - 1] == 1){n++}//Check Negative Block
-  if(table[i - this.state.width + 1] == 1){n++}//Check Negative Block
-  if(table[i + this.state.width - 1] == 1){n++}//Check Exceeds Block
-  if(table[i + this.state.width + 1] == 1){n++}//Check Exceeds Block
-  if(table[i - this.state.width] == 1){n++}//Check Negative Block
-  if(table[i + this.state.width] == 1){n++}//Check Exceeds Block
-  if(table[i] == 1){
+  if(i > 0){ if(table[left].value == 1){n++}}
+  ///////////////////////////////////////////////////////////////Continue From Here
+  /////////////////////////////////////////////////////Left should give nothing
+  if(table[i+1].value == 1){n++}
+  if(table[i - this.state.width - 1].value == 1){n++}//Check Negative Block
+  if(table[i - this.state.width + 1].value == 1){n++}//Check Negative Block
+  if(table[i + this.state.width - 1].value == 1){n++}//Check Exceeds Block
+  if(table[i + this.state.width + 1].value == 1){n++}//Check Exceeds Block
+  if(table[i - this.state.width].value == 1){n++}//Check Negative Block
+  if(table[i + this.state.width].value == 1){n++}//Check Exceeds Block
+  if(table[i].value == 1){
     if(n < 2){return 0}
     if(n > 1 && n < 4){return 1}
     if(n > 3){return 0}
   }
-  if(table[i] == 0){
+  if(table[i].value == 0){
     if(n == 3){return 1}
     else{return 0}
   }
@@ -110,16 +125,16 @@ var Board = React.createClass({
     for(var i = 0; i < t.length; i++){
 	var result = this.checkSquare(i, t);
         console.log(result);
-        newTable[i] = result;
+        newTable[i].value = result;
     }
     this.setState({table:newTable});
   },
   componentDidMount(){
-    setInterval(this.refreshBoard, 3000);
+    setInterval(this.refreshBoard, this.state.interval);
   },
   getInitialState(){
     var t = this.makeArray(this.props.height,this.props.width);
-    return{table: t, height: this.props.height, width: this.props.width}
+    return{table: t, height: this.props.height, width: this.props.width, interval: 3000}
   },
   render(){
     var full = this.state.table;
@@ -129,8 +144,9 @@ var Board = React.createClass({
       rows.push(full.slice(startSquare, startSquare + this.state.width));
     }
     console.log(rows);
+    var that = this;
     rows = rows.map(function(r){
-	return <Row squares={r} />
+	return <Row toggleState={that.toggleState} squares={r} />
      })
     console.log('l');
     return <div id="board">{rows}</div>
