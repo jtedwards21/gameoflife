@@ -57,7 +57,7 @@ var Row = React.createClass({
     var squares = this.props.squares;
     var that = this;
     squares = squares.map(function(s){
-	return <Square toggleState={that.toggleState} value={s.value} number={s.number} />
+	return <Square key={s.number} toggleState={that.toggleState} value={s.value} number={s.number} />
     })
 
     return(
@@ -114,8 +114,6 @@ var Board = React.createClass({
   }
 },
   makeArray(r, c){
-    console.log(r)
-    console.log(c)
     var table = []
     var nOfCells = r*c
     while(nOfCells > 0){
@@ -130,34 +128,76 @@ var Board = React.createClass({
     var newTable = this.state.table;
     for(var i = 0; i < t.length; i++){
 	var result = this.checkSquare(i, t);
-        console.log(result);
         newTable[i].value = result;
     }
     this.setState({table:newTable});
   },
   componentDidMount(){
-    setInterval(this.refreshBoard, this.state.interval);
+    //setInterval(this.refreshBoard, this.state.interval);
   },
   getInitialState(){
     var t = this.makeArray(this.props.height,this.props.width);
-    return{table: t, height: this.props.height, width: this.props.width, interval: 3000}
+    return{table: t, height: this.props.height, width: this.props.width, play:true, interval: 3000}
+  },
+  updateDimensions(h,w){
+    var t = this.makeArray(h, w);
+    this.setState({table: t, height: h, width: w, play:false})
+  },
+  start(){
+  //Begin the Game Play true
+  this.setState({play:true});
   },
   render(){
     var full = this.state.table;
+    console.log(full);
     var rows = [];
+
+    ///What's strange seems to be here
     for(var i = 0; i < this.state.width;i++){
       var startSquare = i * this.state.width;
-      rows.push(full.slice(startSquare, startSquare + this.state.width));
+      
+      var endSquare = startSquare + Number(this.state.width)
+      console.log(endSquare);
+      rows.push(full.slice(startSquare, endSquare));
     }
     console.log(rows);
     var that = this;
-    rows = rows.map(function(r){
-	return <Row toggleState={that.toggleState} squares={r} />
+    rows = rows.map(function(r, i){
+	return <Row key={i} toggleState={that.toggleState} squares={r} />
      })
-    console.log('l');
-    return <div id="board">{rows}</div>
+    if(this.state.play == false){rows = [];}
+    return <div id="container"><DimensionsButtons start={this.start} updateDimensions={this.updateDimensions} /><div id="board">{rows}</div></div>
   }
 });
+
+//Props: UpdateDimensions method
+var DimensionsButtons = React.createClass({
+  getInitialState(){
+    return{height: 6, width: 6}
+  },
+  start(){
+    this.props.start();
+  },
+  setDimensions(){
+    var h = this.state.height;
+    var w = this.state.width;
+    this.props.updateDimensions(h, w);
+  },
+  handleHeightChange(e){
+    this.setState({height: e.target.value});
+  },
+  handleWidthChange(e){
+    this.setState({width: e.target.value})
+  },
+  render(){return(
+     <div>
+	<label>Height</label><input type="text" onChange={this.handleHeightChange} value={this.state.height} />
+	<label>Width</label><input type="text" onChange={this.handleWidthChange} value={this.state.width} />
+	<div onClick={this.setDimensions} className="btn btn-large btn-default">Click</div>
+	<div onClick={this.start} className="btn btn-large btn-default">Start</div>
+     </div>)
+  }
+})
 
 ReactDOM.render(
   <Board height={height} width={width}/>,
