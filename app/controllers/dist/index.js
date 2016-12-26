@@ -173,8 +173,8 @@ var Board = React.createClass({
     var buttonContainer = <ButtonContainer play={this.state.play}　stop={this.stop}  reset={this.reset} start={this.start}/>
     return (
 	      <div id="container">
-	        {dimensions}{buttonContainer}
 	        <div id="board">{rows}</div>
+	        {dimensions}{buttonContainer}
 	      </div>
     )
   }
@@ -221,5 +221,5 @@ var ButtonContainer = React.createClass({
 
 ReactDOM.render(
   <Board size={size} />,
-  document.getElementById('container')
+  document.getElementById('content')
 )
