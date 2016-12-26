@@ -147,8 +147,8 @@ var Board = React.createClass({
     this.setState({play:false});
   },
   reset(){
-    console.log('reset');
-    //Should make a new board as well
+    var t = this.makeArray(this.state.widgetSize, this.state.widgetSize);
+    this.setState({size: this.state.widgetSize, table: t, play: false});
   },
   render(){
     var full = this.state.table;
