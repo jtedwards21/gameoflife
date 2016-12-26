@@ -23,9 +23,6 @@ var setBoard = function(table){
 
 
 
-
-
-
 var Square = React.createClass({
   toggleState(){
     var n = this.props.number
@@ -124,64 +121,22 @@ var Board = React.createClass({
     return table;
   },
   refreshBoard(){
-    var t = this.state.table;
-    var newTable = this.state.table;
-    for(var i = 0; i < t.length; i++){
-	var result = this.checkSquare(i, t);
-        newTable[i].value = result;
+    if(this.state.play == true){
+      var t = this.state.table;
+      var newTable = this.state.table;
+      for(var i = 0; i < t.length; i++){
+	  var result = this.checkSquare(i, t);
+          newTable[i].value = result;
+      }
+      this.setState({table:newTable});
     }
-    this.setState({table:newTable});
   },
   componentDidMount(){
-    //setInterval(this.refreshBoard, this.state.interval);
+    setInterval(this.refreshBoard, this.state.interval);
   },
   getInitialState(){
     var t = this.makeArray(this.props.height,this.props.width);
-    return{table: t, height: this.props.height, width: this.props.width, play:true, interval: 3000}
-  },
-  updateDimensions(h,w){
-    var t = this.makeArray(h, w);
-    this.setState({table: t, height: h, width: w, play:false})
-  },
-  start(){
-  //Begin the Game Play true
-  this.setState({play:true});
-  },
-  render(){
-    var full = this.state.table;
-    console.log(full);
-    var rows = [];
-
-    ///What's strange seems to be here
-    for(var i = 0; i < this.state.width;i++){
-      var startSquare = i * this.state.width;
-      
-      var endSquare = startSquare + Number(this.state.width)
-      console.log(endSquare);
-      rows.push(full.slice(startSquare, endSquare));
-    }
-    console.log(rows);
-    var that = this;
-    rows = rows.map(function(r, i){
-	return <Row key={i} toggleState={that.toggleState} squares={r} />
-     })
-    if(this.state.play == false){rows = [];}
-    return <div id="container"><DimensionsButtons start={this.start} updateDimensions={this.updateDimensions} /><div id="board">{rows}</div></div>
-  }
-});
-
-//Props: UpdateDimensions method
-var DimensionsButtons = React.createClass({
-  getInitialState(){
-    return{height: 6, width: 6}
-  },
-  start(){
-    this.props.start();
-  },
-  setDimensions(){
-    var h = this.state.height;
-    var w = this.state.width;
-    this.props.updateDimensions(h, w);
+    return{table: t, height: this.props.height, width: this.props.width, play:true, interval: 100}
   },
   handleHeightChange(e){
     this.setState({height: e.target.value});
@@ -189,15 +144,85 @@ var DimensionsButtons = React.createClass({
   handleWidthChange(e){
     this.setState({width: e.target.value})
   },
-  render(){return(
-     <div>
-	<label>Height</label><input type="text" onChange={this.handleHeightChange} value={this.state.height} />
-	<label>Width</label><input type="text" onChange={this.handleWidthChange} value={this.state.width} />
-	<div onClick={this.setDimensions} className="btn btn-large btn-default">Click</div>
-	<div onClick={this.start} className="btn btn-large btn-default">Start</div>
-     </div>)
+  start(){
+    this.setState({play:true});
+  },
+  stop(){
+    this.setState({play:false});
+  },
+  reset(){
+    console.log('reset');
+    //Should make a new board as well
+  },
+  render(){
+    var full = this.state.table;
+    var rows = [];
+
+    for(var i = 0; i < this.state.width;i++){
+      var startSquare = i * this.state.width;
+      
+      var endSquare = startSquare + Number(this.state.width)
+      console.log(endSquare);
+      rows.push(full.slice(startSquare, endSquare));
+    }
+
+    var that = this;
+
+    rows = rows.map(function(r, i){
+	return <Row key={i} toggleState={that.toggleState} squares={r} />
+     })
+
+
+    var dimensions = <Dimensions height={this.state.height} width={this.state.width}  handleHeightChange={this.handleHeightChange} handleWidthChange={this.handleWidthChange} />
+    var buttonContainer = <ButtonContainer play={this.state.play}　stop={this.stop}  reset={this.reset} start={this.start}/>
+    return (
+	      <div id="container">
+	        {dimensions}{buttonContainer}
+	        <div id="board">{rows}</div>
+	      </div>
+    )
+  }
+});
+
+
+var Dimensions = React.createClass({
+  getInitialState(){
+    return{height: 6, width: 6}
+  },
+  render(){
+	return (
+        <div id="dimensions">
+	  <label>Height</label><input type="text" onChange={this.props.handleHeightChange} value={this.props.height} />
+	  <label>Width</label><input type="text" onChange={this.props.handleWidthChange} value={this.props.width} />
+        </div>
+            )
   }
 })
+
+var ButtonContainer = React.createClass({
+  getInitialState(){
+    return {}
+  },
+  handleClick(){
+    if(this.props.play == true){
+      this.props.stop();
+    }
+    else if(this.props.play == false){
+	this.props.start();
+    }
+  },
+  render(){
+    var buttonText;
+    if(this.props.play == true) {buttonText = "Stop"}
+    else if(this.props.play == false) {buttonText = "Start"}
+    return (
+	<div id="buttonContainer">
+	  <div onClick={this.handleClick} className="btn btn-large btn-default">{buttonText}</div>
+	  <div onClick={this.props.reset} className="btn btn-large btn-default">Reset</div>
+	</div>
+    )
+  }
+});
 
 ReactDOM.render(
   <Board height={height} width={width}/>,
