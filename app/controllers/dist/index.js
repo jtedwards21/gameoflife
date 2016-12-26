@@ -2,8 +2,7 @@
 //Every round you will have to re-initialize the substitute table
 
 
-var height = 6;
-var width = 6;
+var size = 6;
 
 var getRandomInt = function(min, max) {
   min = Math.ceil(min);
@@ -74,11 +73,11 @@ var Board = React.createClass({
     
   },
   getTopSquare(i){
-    var j = i - this.props.height;
+    var j = i - this.state.size;
     return this.state.table[j]
   },
   getBottomSquare(i){
-    var j = i -this.props.height;
+    var j = i -this.state.size;
     return this.state.table[j]
   },
   checkSquare(i, table){
@@ -86,20 +85,20 @@ var Board = React.createClass({
   var n = 0;
   var left = i - 1;
   var right = i + 1;
-  var top = i - this.state.height;
-  var bottom = i + this.state.height;
+  var top = i - this.state.size;
+  var bottom = i + this.state.size;
   var topRight = top + 1;
   var topLeft = top - 1;
   var bottomRight = bottom + 1;
   var bottomLeft = bottom - 1; 
-  if(i%this.state.width !== 0){ if(table[left].value == 1){n++}}
-  if(i%(this.state.width - 1) !== 0){if(table[right].value == 1){n++}}
-  if(i-this.state.width >= 0 && i%this.state.width !== 0){if(table[topLeft].value == 1){n++}}
-  if(i-this.state.width >= 0 && i%(this.state.width - 1) !== 0){if(table[topRight].value == 1){n++}}
-  if(i+this.state.width < this.state.table.length && i%this.state.width !== 0){if(table[bottomLeft].value == 1){n++}}
-  if(i+this.state.width < (this.state.table.length - 1) && i%(this.state.width - 1) !== 0){if(table[bottomRight].value == 1){console.log(i);n++}}
-  if(i-this.state.width >= 0){if(table[top].value == 1){n++}}
-  if(i+this.state.width < this.state.table.length){if(table[bottom].value == 1){n++}}
+  if(i%this.state.size !== 0){ if(table[left].value == 1){n++}}
+  if(i%(this.state.size - 1) !== 0){if(table[right].value == 1){n++}}
+  if(i-this.state.size >= 0 && i%this.state.size !== 0){if(table[topLeft].value == 1){n++}}
+  if(i-this.state.size >= 0 && i%(this.state.size - 1) !== 0){if(table[topRight].value == 1){n++}}
+  if(i+this.state.size < this.state.table.length && i%this.state.size !== 0){if(table[bottomLeft].value == 1){n++}}
+  if(i+this.state.size < (this.state.table.length - 1) && i%(this.state.size - 1) !== 0){if(table[bottomRight].value == 1){console.log(i);n++}}
+  if(i-this.state.size >= 0){if(table[top].value == 1){n++}}
+  if(i+this.state.size < this.state.table.length){if(table[bottom].value == 1){n++}}
   if(table[i].value == 1){
     if(n < 2){return 0}
     if(n > 1 && n < 4){return 1}
@@ -135,14 +134,11 @@ var Board = React.createClass({
     setInterval(this.refreshBoard, this.state.interval);
   },
   getInitialState(){
-    var t = this.makeArray(this.props.height,this.props.width);
-    return{table: t, height: this.props.height, width: this.props.width, play:true, interval: 100}
+    var t = this.makeArray(this.props.size, this.props.size);
+    return{widgetSize: this.props.size, table: t, size: this.props.size, play:true, interval: 400}
   },
-  handleHeightChange(e){
-    this.setState({height: e.target.value});
-  },
-  handleWidthChange(e){
-    this.setState({width: e.target.value})
+  handleSizeChange(e){
+    this.setState({widgetSize: e.target.value});
   },
   start(){
     this.setState({play:true});
@@ -158,10 +154,10 @@ var Board = React.createClass({
     var full = this.state.table;
     var rows = [];
 
-    for(var i = 0; i < this.state.width;i++){
-      var startSquare = i * this.state.width;
+    for(var i = 0; i < this.state.size;i++){
+      var startSquare = i * this.state.size;
       
-      var endSquare = startSquare + Number(this.state.width)
+      var endSquare = startSquare + Number(this.state.size)
       console.log(endSquare);
       rows.push(full.slice(startSquare, endSquare));
     }
@@ -173,7 +169,7 @@ var Board = React.createClass({
      })
 
 
-    var dimensions = <Dimensions height={this.state.height} width={this.state.width}  handleHeightChange={this.handleHeightChange} handleWidthChange={this.handleWidthChange} />
+    var dimensions = <Dimensions widgetSize={this.state.widgetSize}  handleSizeChange={this.handleSizeChange} />
     var buttonContainer = <ButtonContainer play={this.state.play}　stop={this.stop}  reset={this.reset} start={this.start}/>
     return (
 	      <div id="container">
@@ -192,8 +188,7 @@ var Dimensions = React.createClass({
   render(){
 	return (
         <div id="dimensions">
-	  <label>Height</label><input type="text" onChange={this.props.handleHeightChange} value={this.props.height} />
-	  <label>Width</label><input type="text" onChange={this.props.handleWidthChange} value={this.props.width} />
+	  <label>Size:</label><input type="text" onChange={this.props.handleSizeChange} value={this.props.widgetSize} />
         </div>
             )
   }
@@ -225,6 +220,6 @@ var ButtonContainer = React.createClass({
 });
 
 ReactDOM.render(
-  <Board height={height} width={width}/>,
+  <Board size={size} />,
   document.getElementById('container')
 )
