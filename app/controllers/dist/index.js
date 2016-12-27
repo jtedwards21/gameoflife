@@ -105,7 +105,7 @@ var Board = React.createClass({
   if(i-this.state.size >= 0 && i%this.state.size !== 0){if(table[topLeft].value == 1){n++}}
   if(i-this.state.size >= 0 && i%(this.state.size - 1) !== 0){if(table[topRight].value == 1){n++}}
   if(i+this.state.size < this.state.table.length && i%this.state.size !== 0){if(table[bottomLeft].value == 1){n++}}
-  if(i+this.state.size < (this.state.table.length - 1) && i%(this.state.size - 1) !== 0){if(table[bottomRight].value == 1){console.log(i);n++}}
+  if(i+this.state.size < (this.state.table.length - 1) && i%(this.state.size - 1) !== 0){if(table[bottomRight].value == 1){n++}}
   if(i-this.state.size >= 0){if(table[top].value == 1){n++}}
   if(i+this.state.size < this.state.table.length){if(table[bottom].value == 1){n++}}
   if(table[i].value == 1){
@@ -159,15 +159,31 @@ var Board = React.createClass({
     var t = this.makeArray(this.state.widgetSize, this.state.widgetSize);
     this.setState({size: this.state.widgetSize, table: t, play: false});
   },
+  clearBoard(){
+    this.setState({play:false});
+    var table = [];
+    var nOfCells = size*size;
+    while(nOfCells > 0){
+      table.push(0)
+      nOfCells = nOfCells-1
+    }
+    table = table.map(function(c, i){
+      var square = {};
+      square.number = i;
+      square.value = c;
+      return square;
+    });
+    this.setState({table: table});
+  },
   render(){
     var full = this.state.table;
+    console.log(full);
     var rows = [];
 
     for(var i = 0; i < this.state.size;i++){
       var startSquare = i * this.state.size;
       
       var endSquare = startSquare + Number(this.state.size)
-      console.log(endSquare);
       rows.push(full.slice(startSquare, endSquare));
     }
 
@@ -179,7 +195,7 @@ var Board = React.createClass({
 
 
     var dimensions = <Dimensions widgetSize={this.state.widgetSize}  handleSizeChange={this.handleSizeChange} />
-    var buttonContainer = <ButtonContainer play={this.state.play}　stop={this.stop}  reset={this.reset} start={this.start}/>
+    var buttonContainer = <ButtonContainer play={this.state.play}　clearBoard={this.clearBoard} stop={this.stop}  reset={this.reset} start={this.start}/>
     return (
 	      <div id="container">
 	        <div id="board">{rows}</div>
@@ -223,6 +239,7 @@ var ButtonContainer = React.createClass({
 	<div id="buttonContainer">
 	  <div onClick={this.handleClick} className="my-btn">{buttonText}</div>
 	  <div onClick={this.props.reset} className="my-btn">Reset</div>
+	  <div onClick={this.props.clearBoard} className="my-btn">Clear</div>
 	</div>
     )
   }
