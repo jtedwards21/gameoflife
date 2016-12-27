@@ -28,15 +28,15 @@ var Square = React.createClass({
     this.props.toggleState(n);
   },
   render() {
-    var style;
+    var thisClass;
     if(this.props.value == 1){
-      style={backgroundColor: "red"}
+      thisClass="square square-on"
     } else {
-	style={backgroundColor: "black"}
+	thisClass="square square-off"
     }
     return(
       <div>
-        <div style={style} onClick={this.toggleState} className="square"></div>
+        <div onClick={this.toggleState} className={thisClass}></div>
       </div>
     )
   }
