@@ -69,7 +69,16 @@ var Row = React.createClass({
 
 var Board = React.createClass({
   toggleState(n){
-     console.log(n);
+     var t = this.state.table.slice();
+     var square = this.state.table[n];
+     if(square.value == 1){
+	square.value = 0;
+     }
+     else if (square.value == 0){
+	square.value = 1;
+     }
+     t[square.number] = square;
+     this.setState({table:t});
     
   },
   getTopSquare(i){
