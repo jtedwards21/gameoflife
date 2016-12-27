@@ -136,7 +136,7 @@ var Board = React.createClass({
 	  var result = this.checkSquare(i, t);
           newTable[i].value = result;
       }
-      this.setState({table:newTable});
+      this.setState({table:newTable, generation: this.state.generation + 1});
     }
   },
   componentDidMount(){
@@ -144,7 +144,7 @@ var Board = React.createClass({
   },
   getInitialState(){
     var t = this.makeArray(this.props.size, this.props.size);
-    return{widgetSize: this.props.size, table: t, size: this.props.size, play:true, interval: 400}
+    return{widgetSize: this.props.size, table: t, size: this.props.size, play:true, interval: 400, generation: 0}
   },
   handleSizeChange(e){
     this.setState({widgetSize: e.target.value});
@@ -157,7 +157,7 @@ var Board = React.createClass({
   },
   reset(){
     var t = this.makeArray(this.state.widgetSize, this.state.widgetSize);
-    this.setState({size: this.state.widgetSize, table: t, play: false});
+    this.setState({size: this.state.widgetSize, table: t, play: false, generation: 0});
   },
   clearBoard(){
     this.setState({play:false});
@@ -173,11 +173,10 @@ var Board = React.createClass({
       square.value = c;
       return square;
     });
-    this.setState({table: table});
+    this.setState({table: table, generation:0});
   },
   render(){
     var full = this.state.table;
-    console.log(full);
     var rows = [];
 
     for(var i = 0; i < this.state.size;i++){
@@ -196,10 +195,11 @@ var Board = React.createClass({
 
     var dimensions = <Dimensions widgetSize={this.state.widgetSize}  handleSizeChange={this.handleSizeChange} />
     var buttonContainer = <ButtonContainer play={this.state.play}　clearBoard={this.clearBoard} stop={this.stop}  reset={this.reset} start={this.start}/>
+    var generationCounter = <GenerationCounter value={this.state.generation} />
     return (
 	      <div id="container">
 	        <div id="board">{rows}</div>
-	        <div id="controls">{dimensions}{buttonContainer}</div>
+	        <div id="controls">{dimensions}{buttonContainer}{generationCounter}</div>
 	      </div>
     )
   }
@@ -218,6 +218,20 @@ var Dimensions = React.createClass({
             )
   }
 })
+
+var GenerationCounter = React.createClass({
+  getInitialState(){
+    return {};
+  },
+  render(){
+    return (
+	<div id="generation-counter">
+	  <div>Generations:</div>
+	　　<div>{this.props.value}</div>
+	</div>
+    )
+  }
+});
 
 var ButtonContainer = React.createClass({
   getInitialState(){

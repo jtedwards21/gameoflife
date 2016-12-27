@@ -67,7 +67,7 @@ body {
   display: flex;
   margin-left: auto;
   margin-right: auto;
-  width: 200px;
+  width: 300px;
 }
 
 #button-container {
@@ -102,6 +102,16 @@ body {
 #dimensions label {
   color: white;
   font-family: Denominator;
+}
+
+#generation-counter {
+  display: flex;
+  font-family: Denominator;
+  color: white;
+}
+
+#generation-counter div {
+  display: inline;
 }
 
 .footer {
