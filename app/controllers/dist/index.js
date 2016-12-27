@@ -2,7 +2,7 @@
 //Every round you will have to re-initialize the substitute table
 
 
-var size = 6;
+var size = 8;
 
 var getRandomInt = function(min, max) {
   min = Math.ceil(min);
@@ -174,7 +174,7 @@ var Board = React.createClass({
     return (
 	      <div id="container">
 	        <div id="board">{rows}</div>
-	        {dimensions}{buttonContainer}
+	        <div id="controls">{dimensions}{buttonContainer}</div>
 	      </div>
     )
   }
@@ -212,8 +212,8 @@ var ButtonContainer = React.createClass({
     else if(this.props.play == false) {buttonText = "Start"}
     return (
 	<div id="buttonContainer">
-	  <div onClick={this.handleClick} className="btn btn-large btn-default">{buttonText}</div>
-	  <div onClick={this.props.reset} className="btn btn-large btn-default">Reset</div>
+	  <div onClick={this.handleClick} className="my-btn">{buttonText}</div>
+	  <div onClick={this.props.reset} className="my-btn">Reset</div>
 	</div>
     )
   }

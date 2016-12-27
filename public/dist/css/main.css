@@ -26,7 +26,9 @@ body {
   margin-left: auto;
   margin-right: auto;
   float: none;
-  margin-top: 10px; }
+  margin-top: 10px;
+  width: 500px;
+  margin-top: 50px; }
 
 .board-row {
   display: -ms-flexbox;
@@ -42,6 +44,41 @@ body {
   padding: 0;
   width: 62.5px;
   height: 62.5px; }
+
+#controls {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  width: 200px; }
+
+#button-container {
+  display: inline; }
+
+.my-btn {
+  background-color: #333;
+  color: white;
+  font-family: Denominator;
+  border-radius: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  display: inline;
+  margin-right: 5px;
+  vertical-align: middle;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  cursor: pointer; }
+
+#dimensions {
+  display: inline; }
+
+#dimensions input {
+  width: 30px;
+  background-color: #333;
+  color: white; }
+
+#dimensions label {
+  color: white;
+  font-family: Denominator; }
 
 .footer {
   position: fixed;
