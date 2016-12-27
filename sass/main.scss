@@ -1,9 +1,9 @@
 $boardWidth: 500px;
 $squareSize: 8;
-$boxColor: blue;
-$squareOffColor: black;
-$squareOnColor: purple;
-
+$boxColor: #7F0008;
+$squareOffColor: #400004;
+$squareOnColor: #FF0010;
+$bgColor: #400004;
 
 $boxWidth: $boardWidth + 100px;
 $squareWidth: $boardWidth / $squareSize;
@@ -13,6 +13,10 @@ $squareWidth: $boardWidth / $squareSize;
   font-style: normal;
   font-weight: normal;
   src: url("Denominator.ttf") format('truetype');
+}
+
+body {
+  background-color: $bgColor;
 }
 
 .square-on {
@@ -82,3 +86,18 @@ $squareWidth: $boardWidth / $squareSize;
   margin-top: 5px;
 }
 
+.header {
+　　position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #333;
+  text-align: center;
+}
+
+.header p {
+  font-size: 2em;
+  color: white;
+  font-family: Denominator;
+}
